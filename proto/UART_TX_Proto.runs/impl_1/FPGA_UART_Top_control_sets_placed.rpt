@@ -1,0 +1,99 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
+| Date         : Fri Nov  6 17:23:21 2026
+| Host         : gaphs19.portoalegre.pucrsnet.br running 64-bit Rocky Linux release 8.10 (Green Obsidian)
+| Command      : report_control_sets -verbose -file FPGA_UART_Top_control_sets_placed.rpt
+| Design       : FPGA_UART_Top
+| Device       : xc7a100t
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |    21 |
+|    Minimum number of control sets                        |    21 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    46 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |    21 |
+| >= 0 to < 4        |     0 |
+| >= 4 to < 6        |     1 |
+| >= 6 to < 8        |    16 |
+| >= 8 to < 10       |     2 |
+| >= 10 to < 12      |     1 |
+| >= 12 to < 14      |     0 |
+| >= 14 to < 16      |     0 |
+| >= 16              |     1 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |               0 |            0 |
+| No           | No                    | Yes                    |              41 |           14 |
+| No           | Yes                   | No                     |               0 |            0 |
+| Yes          | No                    | No                     |             112 |           48 |
+| Yes          | No                    | Yes                    |              33 |           15 |
+| Yes          | Yes                   | No                     |               0 |            0 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++----------------+----------------------------------------------+------------------------------+------------------+----------------+--------------+
+|  Clock Signal  |                 Enable Signal                |       Set/Reset Signal       | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------+----------------------------------------------+------------------------------+------------------+----------------+--------------+
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/E[0]                  | u_uart_tx/u_RingBuffer/AR[0] |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[11][6]_i_1_n_0 |                              |                4 |              7 |         1.75 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[6][6]_i_1_n_0  |                              |                4 |              7 |         1.75 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[5][6]_i_1_n_0  |                              |                3 |              7 |         2.33 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[4][6]_i_1_n_0  |                              |                1 |              7 |         7.00 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[3][6]_i_1_n_0  |                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[0][6]_i_1_n_0  |                              |                4 |              7 |         1.75 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[10][6]_i_1_n_0 |                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[1][6]_i_1_n_0  |                              |                1 |              7 |         7.00 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[2][6]_i_1_n_0  |                              |                4 |              7 |         1.75 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[15][6]_i_1_n_0 |                              |                1 |              7 |         7.00 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[14][6]_i_1_n_0 |                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[13][6]_i_1_n_0 |                              |                5 |              7 |         1.40 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[12][6]_i_1_n_0 |                              |                7 |              7 |         1.00 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[9][6]_i_1_n_0  |                              |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[8][6]_i_1_n_0  |                              |                5 |              7 |         1.40 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/buffer[7][6]_i_1_n_0  |                              |                1 |              7 |         7.00 |
+|  clk_IBUF_BUFG | u_uart_tx/clks_per_bit_0                     | u_uart_tx/u_RingBuffer/AR[0] |                2 |              9 |         4.50 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/current_reg[0]        | u_uart_tx/u_RingBuffer/AR[0] |                4 |              9 |         2.25 |
+|  clk_IBUF_BUFG | u_uart_tx/u_RingBuffer/data_o[6]_i_1_n_0     | u_uart_tx/u_RingBuffer/AR[0] |                8 |             11 |         1.38 |
+|  clk_IBUF_BUFG |                                              | u_uart_tx/u_RingBuffer/AR[0] |               14 |             41 |         2.93 |
++----------------+----------------------------------------------+------------------------------+------------------+----------------+--------------+
+
+

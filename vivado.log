@@ -1,0 +1,51 @@
+#-----------------------------------------------------------
+# Vivado v2024.2 (64-bit)
+# SW Build 5239630 on Fri Nov 08 22:34:34 MST 2024
+# IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+# SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+# Start of session at: Fri Nov  6 16:27:11 2026
+# Process ID         : 545542
+# Current directory  : /home/nathan.cidal/VLSI_T5
+# Command line       : vivado proto/UART_TX_Proto.xpr
+# Log file           : /home/nathan.cidal/VLSI_T5/vivado.log
+# Journal file       : /home/nathan.cidal/VLSI_T5/vivado.jou
+# Running On         : gaphs19.portoalegre.pucrsnet.br
+# Platform           : Rocky
+# Operating System   : Rocky Linux release 8.10 (Green Obsidian)
+# Processor Detail   : Intel(R) Core(TM) i9-14900F
+# CPU Frequency      : 2000.000 MHz
+# CPU Physical cores : 24
+# CPU Logical cores  : 32
+# Host memory        : 67099 MB
+# Swap memory        : 33751 MB
+# Total Virtual      : 100851 MB
+# Available Virtual  : 91865 MB
+#-----------------------------------------------------------
+start_gui
+open_project proto/UART_TX_Proto.xpr
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at /soft64/xilinx/ferramentas/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at /soft64/xilinx/ferramentas/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
+WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at /soft64/xilinx/ferramentas/Vivado/2024.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+INFO: [Project 1-313] Project file moved from '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto' since last save.
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.gen/sources_1'.
+WARNING: [filemgmt 56-3] IPUserFilesDir: Could not find the directory '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.ip_user_files'.
+WARNING: [Project 1-312] File not found as '/home/nathan.cidal/rtl/ringbuffer.sv'; using path '/home/nathan.cidal/VLSI_T5/rtl/ringbuffer.sv' instead.
+WARNING: [Project 1-312] File not found as '/home/nathan.cidal/rtl/uart_tx.sv'; using path '/home/nathan.cidal/VLSI_T5/rtl/uart_tx.sv' instead.
+WARNING: [Project 1-312] File not found as '/home/nathan.cidal/VLSI_T5/FPGA_Top.sv'; using path '/home/nathan.cidal/VLSI_T5/proto/FPGA_Top.sv' instead.
+WARNING: [Project 1-312] File not found as '/home/nathan.cidal/VLSI_T5/constraints.xdc'; using path '/home/nathan.cidal/VLSI_T5/proto/constraints.xdc' instead.
+CRITICAL WARNING: [Project 1-311] Could not find the file '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.srcs/utils_1/imports/synth_1/FPGA_UART_Top.dcp', nor could it be found using path '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto/UART_TX_Proto.srcs/utils_1/imports/synth_1/FPGA_UART_Top.dcp'.
+WARNING: [Project 1-865] Could not find the file /home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.srcs/utils_1/imports/synth_1/FPGA_UART_Top.dcp
+Scanning sources...
+Finished scanning sources
+WARNING: [Project 1-509] GeneratedRun file for 'synth_1' not found
+WARNING: [Project 1-509] GeneratedRun file for 'impl_1' not found
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/soft64/xilinx/ferramentas/Vivado/2024.2/data/ip'.
+update_compile_order -fileset sources_1
+launch_runs synth_1 -jobs 32
+ERROR: [Vivado 12-3280] Incremental checkpoint file '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.srcs/utils_1/imports/synth_1/FPGA_UART_Top.dcp' set on run 'synth_1' does not exist.
+launch_runs synth_1 -jobs 32
+ERROR: [Vivado 12-3280] Incremental checkpoint file '/home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.srcs/utils_1/imports/synth_1/FPGA_UART_Top.dcp' set on run 'synth_1' does not exist.
+exit
+INFO: [Common 17-206] Exiting Vivado at Fri Nov  6 16:28:14 2026...

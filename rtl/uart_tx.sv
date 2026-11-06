@@ -1,14 +1,14 @@
 module uart_tx
 #(
-    parameter int CLK_REF = 32'd100_000_000 // Hertz
+    parameter int CLK_REF = 100_000_000 // Hertz
 )
 (
     input  logic       clock_in,
-    input  logic       reset_in,
+    input  logic       reset_in,        // ativo em 1
     input  logic [7:0] data_p_in,
-    input  logic       data_p_en_in,
+    input  logic       data_p_en_in,    // escreve data_p_in no buffer (se não cheio)
     input  logic [1:0] uart_rate_tx_sel,
-    output logic       buffer_full,           // For Control    
+    output logic       buffer_full,
     output logic       uart_data_tx
 );
 
@@ -17,7 +17,7 @@ logic uart_busy;
 ///////////////////////////////////////////////////////////
 //                   States for FSM                      //
 ///////////////////////////////////////////////////////////
-typedef enum logic [4:0] {
+typedef enum logic [3:0] {
     IDLE     = 0,
     GET_DATA = 1,
     START    = 2,
@@ -36,19 +36,19 @@ state_t current_state;
 state_t next_state;
 
 ///////////////////////////////////////////////////////////
-//                       Sync Flops                      //
+//        Sincronizador da seleção de baud (2 FFs)       //
 ///////////////////////////////////////////////////////////
+logic [1:0] uart_rate_tx_sel_q1;
 logic [1:0] uart_rate_tx_sel_q;
-logic       data_p_en_in_q;
 
 always_ff @(posedge clock_in or posedge reset_in) begin
-    if(reset_in) begin
-        uart_rate_tx_sel_q <= '0;
-        data_p_en_in_q     <= 1'b0;
+    if (reset_in) begin
+        uart_rate_tx_sel_q1 <= '0;
+        uart_rate_tx_sel_q  <= '0;
     end
     else begin
-        uart_rate_tx_sel_q <= uart_rate_tx_sel;
-        data_p_en_in_q     <= data_p_en_in;
+        uart_rate_tx_sel_q1 <= uart_rate_tx_sel;
+        uart_rate_tx_sel_q  <= uart_rate_tx_sel_q1;
     end
 end
 
@@ -59,20 +59,20 @@ logic [31:0] clks_per_bit;
 logic [31:0] clks_per_bit_target;
 
 always_comb begin
-    unique case(uart_rate_tx_sel_q)
-        2'b00: begin clks_per_bit_target <= (CLK_REF /  32'd9600); end
-        2'b01: begin clks_per_bit_target <= (CLK_REF / 32'd19200); end
-        2'b10: begin clks_per_bit_target <= (CLK_REF / 32'd28800); end
-        2'b11: begin clks_per_bit_target <= (CLK_REF / 32'd57600); end
-    endcase 
+    unique case (uart_rate_tx_sel_q)
+        2'b00:   clks_per_bit_target = CLK_REF / 9600;
+        2'b01:   clks_per_bit_target = CLK_REF / 19200;
+        2'b10:   clks_per_bit_target = CLK_REF / 28800;
+        default: clks_per_bit_target = CLK_REF / 57600;
+    endcase
 end
 
 always_ff @(posedge clock_in or posedge reset_in) begin
-    if(reset_in) begin
-        clks_per_bit        <= (CLK_REF / 32'd9600);
+    if (reset_in) begin
+        clks_per_bit <= CLK_REF / 9600;
     end
     else begin
-        if(current_state == IDLE) begin
+        if (current_state == IDLE) begin
             clks_per_bit <= clks_per_bit_target;
         end
     end
@@ -81,179 +81,99 @@ end
 ///////////////////////////////////////////////////////////
 //              UART Pulse Generator                     //
 ///////////////////////////////////////////////////////////
-logic uart_pulse;
+logic        uart_pulse;
 logic [31:0] bit_counter;
 
+assign uart_pulse = uart_busy && (bit_counter >= clks_per_bit - 1);
+
 always_ff @(posedge clock_in or posedge reset_in) begin
-    if(reset_in) begin
+    if (reset_in) begin
         bit_counter <= '0;
-        uart_pulse  <= 1'b0;
     end
     else begin
-        if(uart_busy) begin
-            bit_counter <= bit_counter + 1'b1;
-            
-            if(bit_counter >= clks_per_bit - 1) begin
-                bit_counter <= '0;
-                uart_pulse <= 1'b1;
-            end
-            else begin
-                uart_pulse <= 1'b0;
-            end
-        end
-        else begin
-            uart_pulse  <= 1'b0;
+        if (!uart_busy) begin
             bit_counter <= '0;
+        end  
+        else if (uart_pulse) begin
+            bit_counter <= '0;
+        end else begin
+            bit_counter <= bit_counter + 1'b1;
         end
     end
 end
 
 ///////////////////////////////////////////////////////////
-//                    Send Data Logic                    //
+//                    Ring Buffer                        //
 ///////////////////////////////////////////////////////////
-
-always_ff @(posedge clock_in or posedge reset_in) begin
-    if(reset_in) begin
-        current_state <= IDLE;
-    end
-    else begin
-        current_state <= next_state;
-    end
-end
-
-logic [7:0] write_data;
 logic [7:0] read_data;
-logic we;
-logic re;
-logic empty;
-logic full;
-logic rx_ack;
-logic tx_ack;
+logic       re;
+logic       empty;
+logic       full;
 
-assign we         = data_p_en_in_q;
-assign write_data = data_p_in;
+assign re = (current_state == GET_DATA);
 
-// Ring Buffer
 ringbuffer #(
-    .DATA_WIDTH(8),
+    .DATA_WIDTH (8),
     .BUFFER_SIZE(16)
 ) u_RingBuffer (
     .clk_i   (clock_in),
     .reset_i (reset_in),
-    .data_i  (write_data),
-    .data_o  (read_data), 
-    .rx_we_i (we),
+    .data_i  (data_p_in),
+    .data_o  (read_data),
+    .rx_we_i (data_p_en_in),
     .tx_re_i (re),
-    .empty_o (empty), // Condition to start sending new datas
-    .full_o  (full),  // Intended for the user to know that there's no space in the buffer
-    .rx_ack_o(),      // No Use in this context
-    .tx_ack_o(tx_ack) 
+    .empty_o (empty),
+    .full_o  (full)
 );
 
-// Read Logic (RingBuffer)
+///////////////////////////////////////////////////////////
+//                         FSM                           //
+///////////////////////////////////////////////////////////
 always_ff @(posedge clock_in or posedge reset_in) begin
-    if(reset_in) begin
-        re <= 1'b0;
-    end
-    else begin
-        if((current_state == IDLE) && !empty) begin
-            re <= 1'b1;
-        end
-        else begin
-            re <= 1'b0;
-        end
-    end
+    if (reset_in) current_state <= IDLE;
+    else          current_state <= next_state;
 end
 
-always_comb begin
-    next_state = IDLE;
-    uart_busy = 1'b1;
+assign uart_busy = (current_state != IDLE) && (current_state != GET_DATA);
 
-    unique case(current_state)
-        IDLE:  begin
-            if(!empty) begin // Theres Data Inside RingBuffer
-                next_state = GET_DATA;
-            end
-            uart_busy = 1'b0;
+always_comb begin
+    next_state = current_state;
+
+    unique case (current_state)
+        IDLE: begin
+            if (!empty) next_state = GET_DATA;
         end
 
         GET_DATA: begin
-            // Condition to go to START (RingBuffer successfully returned a new data)
             next_state = START;
-            uart_busy = 1'b0;
         end
 
-        START: begin
-            next_state = START;
-            if(uart_pulse) begin
-                next_state = D0;
-            end
-        end
-        D0   : begin
-            next_state = D0;
-            if(uart_pulse) begin
-                next_state = D1;
-            end
-        end
-        D1   : begin
-            next_state = D1;
-            if(uart_pulse) begin
-                next_state = D2;
-            end
-        end
-        D2   : begin
-            next_state = D2;
-            if(uart_pulse) begin
-                next_state = D3;
-            end
-        end
-        D3   : begin
-            next_state = D3;
-            if(uart_pulse) begin
-                next_state = D4;
-            end
-        end
-        D4   : begin
-            next_state = D4;
-            if(uart_pulse) begin
-                next_state = D5;
-            end
-        end
-        D5   : begin
-            next_state = D5;
-            if(uart_pulse) begin
-                next_state = D6;
-            end
-        end
-        D6   : begin
-            next_state = D6;
-            if(uart_pulse) begin
-                next_state = D7;
-            end
-        end
-        D7   : begin
-            next_state = D7;
-            if(uart_pulse) begin
-                next_state = STOP;
-            end
-        end
-        STOP : begin
-            next_state = STOP;
-            if(uart_pulse) begin
-                next_state = IDLE; 
-            end
-        end
-        default: begin next_state = IDLE; end
+        START: if (uart_pulse) next_state = D0;
+        D0:    if (uart_pulse) next_state = D1;
+        D1:    if (uart_pulse) next_state = D2;
+        D2:    if (uart_pulse) next_state = D3;
+        D3:    if (uart_pulse) next_state = D4;
+        D4:    if (uart_pulse) next_state = D5;
+        D5:    if (uart_pulse) next_state = D6;
+        D6:    if (uart_pulse) next_state = D7;
+        D7:    if (uart_pulse) next_state = STOP;
+        STOP:  if (uart_pulse) next_state = IDLE;
+
+        default: next_state = IDLE;
     endcase
 end
 
-logic uart_data_tx_reg; 
+///////////////////////////////////////////////////////////
+//                  Saída serial                         //
+///////////////////////////////////////////////////////////
+logic uart_data_tx_reg;
+
 always_ff @(posedge clock_in or posedge reset_in) begin
-    if(reset_in) begin
+    if (reset_in) begin
         uart_data_tx_reg <= 1'b1;
     end
     else begin
-        case(current_state)
+        case (current_state)
             START:   uart_data_tx_reg <= 1'b0;
             D0:      uart_data_tx_reg <= read_data[0];
             D1:      uart_data_tx_reg <= read_data[1];
@@ -263,13 +183,12 @@ always_ff @(posedge clock_in or posedge reset_in) begin
             D5:      uart_data_tx_reg <= read_data[5];
             D6:      uart_data_tx_reg <= read_data[6];
             D7:      uart_data_tx_reg <= read_data[7];
-            STOP:    uart_data_tx_reg <= 1'b1;
-            default: uart_data_tx_reg <= 1'b1;
+            default: uart_data_tx_reg <= 1'b1;   
         endcase
     end
 end
 
-assign buffer_full = full;
+assign buffer_full  = full;
 assign uart_data_tx = uart_data_tx_reg;
 
 endmodule

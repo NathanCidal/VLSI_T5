@@ -1,0 +1,16 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.2 (lin64) Build 5239630 Fri Nov 08 22:34:34 MST 2024
+| Date         : Fri Nov  6 17:23:34 2026
+| Host         : gaphs19.portoalegre.pucrsnet.br running 64-bit Rocky Linux release 8.10 (Green Obsidian)
+| Command      : report_bus_skew -warn_on_violation -file FPGA_UART_Top_bus_skew_routed.rpt -pb FPGA_UART_Top_bus_skew_routed.pb -rpx FPGA_UART_Top_bus_skew_routed.rpx
+| Design       : FPGA_UART_Top
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Bus Skew Report
+
+No bus skew constraints
+

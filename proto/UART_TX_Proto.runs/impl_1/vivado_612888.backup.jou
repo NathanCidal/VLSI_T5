@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.2 (64-bit)
+# SW Build 5239630 on Fri Nov 08 22:34:34 MST 2024
+# IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+# SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+# Start of session at: Fri Nov  6 16:41:24 2026
+# Process ID         : 612888
+# Current directory  : /home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.runs/impl_1
+# Command line       : vivado -log FPGA_UART_Top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source FPGA_UART_Top.tcl -notrace
+# Log file           : /home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.runs/impl_1/FPGA_UART_Top.vdi
+# Journal file       : /home/nathan.cidal/VLSI_T5/proto/UART_TX_Proto.runs/impl_1/vivado.jou
+# Running On         : gaphs19.portoalegre.pucrsnet.br
+# Platform           : Rocky
+# Operating System   : Rocky Linux release 8.10 (Green Obsidian)
+# Processor Detail   : Intel(R) Core(TM) i9-14900F
+# CPU Frequency      : 2000.000 MHz
+# CPU Physical cores : 24
+# CPU Logical cores  : 32
+# Host memory        : 67099 MB
+# Swap memory        : 33751 MB
+# Total Virtual      : 100851 MB
+# Available Virtual  : 89013 MB
+#-----------------------------------------------------------
+source FPGA_UART_Top.tcl -notrace

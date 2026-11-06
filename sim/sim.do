@@ -25,4 +25,4 @@ set StdVitalGlitchNoWarnings 1
 add wave sim:/*
 
 ## execução da simulação.
-run 3ms
+run 25ms

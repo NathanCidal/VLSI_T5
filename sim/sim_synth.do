@@ -16,7 +16,7 @@ vlog    ../synthesis/deliverables/uart_tx_netlist.sv
 vlog    ./uart_tx_tb.sv
 
 ## comando de simulação  
-vsim -voptargs=+acc -wlfdeleteonquit work.uart_tx_tb
+vsim -voptargs=+acc -wlfdeleteonquit work.tb_top
         
 set StdArithNoWarnings 1
 set StdVitalGlitchNoWarnings 1 
